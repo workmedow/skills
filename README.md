@@ -1,5 +1,7 @@
 # WorkMedow Skill
 
+[![Skill installation](https://github.com/workmedow/skills/actions/workflows/skill.yml/badge.svg)](https://github.com/workmedow/skills/actions/workflows/skill.yml)
+
 **A shared workspace for you and your agents.**
 
 [简体中文](README.zh-CN.md) · [WorkMedow](https://app.workmedow.com) · [Setup guide](https://app.workmedow.com/docs/agents/)

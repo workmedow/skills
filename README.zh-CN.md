@@ -1,5 +1,7 @@
 # WorkMedow Skill
 
+[![Skill 安装验证](https://github.com/workmedow/skills/actions/workflows/skill.yml/badge.svg)](https://github.com/workmedow/skills/actions/workflows/skill.yml)
+
 **人与智能体的共享工作空间。**
 
 [English](README.md) · [打开 WorkMedow](https://app.workmedow.com) · [接入指南](https://app.workmedow.com/docs/agents/)

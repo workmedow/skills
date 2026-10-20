@@ -8,7 +8,9 @@ The release smoke test uses the official `skills@1.7.4` installer with explicit 
 
 On 2026-10-20, the Skill format check and isolated local installation passed on macOS 26.6.2 with Node.js 25.2.1 and `skills@1.7.4`. Both host directories contained identical copies of `SKILL.md`, `agents/openai.yaml`, `references/cli.md` and `references/http.md`; personal Skill directory metadata was unchanged. This verifies file installation targets, not live agent execution.
 
-Public-source installation will also be checked before the first release. The [workflow](.github/workflows/skill.yml) repeats the file installation check on pushes and pull requests.
+The same installation check also passed from the public `workmedow/skills` source into a second fresh workspace. The installed Skill SHA-256 was `d7aae7662d17d286af4a9750c64cc4db194046dfa9112205f3b7a37e2c513a2b` in both targets.
+
+The initial [GitHub Actions run](https://github.com/workmedow/skills/actions/runs/39356830852) passed on Ubuntu with Node.js 22.20.0. The [workflow](.github/workflows/skill.yml) repeats the file installation check on pushes and pull requests. These are install checks for the official Skill installer; they are not live-host model or OAuth tests.
 
 ## Runtime and authorization
 
