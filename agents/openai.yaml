@@ -1,4 +1,6 @@
 interface:
   display_name: "WorkMedow"
   short_description: "Share goals, input requests, and verified results"
-  default_prompt: "Use $workmedow to confirm my selected project, open a business session for this conversation if needed, and summarize my work queue and unanswered input requests. Leave tasks and message receipts unchanged."
+  default_prompt: "Use $workmedow to carry out and record my current authorized goal in the selected project, reusing or creating one task, recording meaningful progress, and saving the verified result."
+policy:
+  allow_implicit_invocation: true

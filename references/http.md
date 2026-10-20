@@ -14,25 +14,9 @@ These reads do not require the CLI or a business session. Project context can th
 
 ## Session-bound work
 
-Only when creating a business session is within the human's request and the host can meet the write requirements below:
+For requested work, follow [workflow.md](workflow.md) only when the host can meet the write requirements below. Send its command operation to `POST /api/v1/commands/OPERATION`. Replace the examples' `business_session_id` field with **`session_id`** for direct HTTP; do not send both. Keep the real `project_id` and all operation-specific fields.
 
-```http
-POST /api/v1/commands/sessions.open
-Content-Type: application/json
-
-{"project_id":"APPROVED_PROJECT_ID","name":"Current external conversation","idempotency_key":"DURABLY_SAVED_UNIQUE_KEY"}
-```
-
-Persist the returned `data.id` for this conversation. A different conversation needs its own session; reconnects of this conversation reuse its existing session. Do not infer it from an HTTP/MCP transport session or borrow another conversation's session.
-
-```http
-POST /api/v1/commands/agent.work_queue
-Content-Type: application/json
-
-{"project_id":"APPROVED_PROJECT_ID","session_id":"CURRENT_CONVERSATION_SESSION_ID"}
-```
-
-The queue is non-consuming: it does not claim tasks or ACK messages. The HTTP command contract uses **`session_id`**; MCP publishes **`business_session_id`** and performs an explicit adapter conversion. Direct HTTP calls must use the HTTP field. Use current task/request versions for subsequent mutations rather than copying versions from old conversation text.
+Persist the returned `data.id` from `sessions.open` for this conversation. Different conversations need distinct sessions; reconnects of this conversation reuse its existing session. Do not infer it from an HTTP/MCP transport session or borrow another conversation's session. The queue operation is `agent.work_queue` with `project_id` and this `session_id`; it does not claim tasks or ACK messages.
 
 ## Host-owned write durability
 

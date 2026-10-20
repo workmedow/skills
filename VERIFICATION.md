@@ -4,6 +4,8 @@ This repository distributes the WorkMedow Skill. Installing it does not configur
 
 ## Installation checks
 
+### Initial v0.1.0 publication
+
 The release smoke test uses the official `skills@1.7.4` installer with explicit Codex and OpenClaw targets, project scope, and copy mode. It verifies the installed Skill, every relative Markdown reference, and Codex UI metadata byte for byte against the source. Tests run in a separate Git workspace with telemetry disabled and do not install into the operator's personal Skill directories.
 
 On 2026-10-20, the Skill format check and isolated local installation passed on macOS 26.6.2 with Node.js 25.2.1 and `skills@1.7.4`. Both host directories contained identical copies of `SKILL.md`, `agents/openai.yaml`, `references/cli.md` and `references/http.md`; personal Skill directory metadata was unchanged. This verifies file installation targets, not live agent execution.
@@ -11,6 +13,16 @@ On 2026-10-20, the Skill format check and isolated local installation passed on 
 The same installation check also passed from the public `workmedow/skills` source into a second fresh workspace. The installed Skill SHA-256 was `d7aae7662d17d286af4a9750c64cc4db194046dfa9112205f3b7a37e2c513a2b` in both targets.
 
 The initial [GitHub Actions run](https://github.com/workmedow/skills/actions/runs/39356830852) passed on Ubuntu with Node.js 22.20.0. The [workflow](.github/workflows/skill.yml) repeats the file installation check on pushes and pull requests. These are install checks for the official Skill installer; they are not live-host model or OAuth tests.
+
+## Work-recording checks for v0.1.1
+
+On 2026-10-20, the revised Skill and all three workflow/transport references passed format checks and isolated copy-mode installation into Codex and OpenClaw project directories. All five Skill payload files matched their source bytes. This remains an installer check, not proof that either host automatically selected the Skill.
+
+- An independent agent explicitly loaded the Skill, used an already configured CLI and a local MySQL-backed project, reproduced and fixed a small code defect, and passed the two existing tests. It reused one goal through `todo → in_progress → done` and read back the saved result. This verifies a loaded Skill's work-recording behavior through the CLI.
+- A separate independent agent received a strictly read-only connection-check request while its credential had write permission. It created no business session, task, progress, completion or receipt; the local operation journal remained empty.
+- The companion service's official MCP SDK test completed the same lifecycle against real local Agent authentication and MySQL. Replaying a progress write with the original key returned the identical Activity, preserved the task version and did not duplicate progress. The independent protocol session was closed after completion.
+
+These checks used isolated fixtures. They do not establish Muse cloud execution, Muse's automatic Skill discovery, a live OpenClaw model, production OAuth, or a different project's authorization. Installing/updating a Skill does not replace instructions already cached by a running host; ask that host to load the installed Skill again before evaluating it.
 
 ## Runtime and authorization
 

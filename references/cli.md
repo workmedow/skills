@@ -2,6 +2,8 @@
 
 The operator installs the binary for this machine and signs in once with a named profile bound to one real project. Browser PKCE is the default; `login --device` supports a headless machine when the server advertises device authorization. A private project credential can alternatively be imported with `--token-file`; never put a token in command arguments or chat.
 
+`doctor` does not refresh an expired access token. Normal API calls can renew the existing OAuth profile within its approved identity/project/scopes before reading or writing. If renewal cannot be confirmed, report that limitation and reauthorize explicitly; do not switch profiles or broaden access to continue.
+
 ```sh
 workmedow --profile team login
 workmedow --profile team doctor
@@ -20,18 +22,15 @@ JSON
 
 JSON arguments come from stdin or `--input /path/to/arguments.json`. Output is JSON with `data` and, for a journaled mutation, `operation_id`. Do not construct shell commands by interpolating task text. Supply JSON through a file or a quoted heredoc; keep personal content out of terminal logs when possible.
 
-Open a session deliberately, then use its returned `data.id` for this conversation:
+For requested work, use the operation names and JSON payloads in [workflow.md](workflow.md). The CLI accepts `business_session_id` and maps it to HTTP `session_id`; the profile supplies its project when omitted and rejects a different explicit `project_id`. Save the returned session ID for this conversation and task ID for this goal.
+
+For example, save the selected operation's JSON arguments in a file, then run:
 
 ```sh
-workmedow --profile team api call sessions.open --input - <<'JSON'
-{"name":"Current work conversation","idempotency_key":"A_UNIQUE_OPERATION_KEY"}
-JSON
-workmedow --profile team api call agent.work_queue --input - <<'JSON'
-{"business_session_id":"SESSION_ID"}
-JSON
+workmedow --profile team api call tasks.create --input /path/to/create-goal.json
 ```
 
-The profile binds the project; a different explicit `project_id` is rejected. Obtain latest task versions with `tasks.get`. Use supported operations from the server contract: `tasks.create/update/complete`, `projects.post_update`, `action_requests.list/create/answer`, and `sessions.close`. Inspect the tool/API schema for required versions rather than inventing them. CLI mutations missing a key receive one durable key before transmission; callers may also supply their own stable key. Never reuse a key for changed arguments.
+The same form invokes `tasks.get`, `tasks.update`, `tasks.progress` and `tasks.complete` with their corresponding payloads. There is no CLI schema subcommand: use the field contract in the workflow reference, not guessed flags. A progress response is an activity, not a new task version. CLI mutations missing a key receive one durable key before transmission; callers may supply their own stable key. Never reuse a key for changed arguments.
 
 If the terminal reports an unknown operation result or the process was killed:
 
