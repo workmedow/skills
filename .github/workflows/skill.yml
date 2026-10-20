@@ -1,0 +1,31 @@
+name: Skill installation
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  install:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '22.20.0'
+      - name: Install and compare isolated project copies
+        env:
+          SOURCE_DIR: ${{ github.workspace }}
+          DISABLE_TELEMETRY: '1'
+          DO_NOT_TRACK: '1'
+        run: |
+          skill_qa_dir=$(mktemp -d "${RUNNER_TEMP}/workmedow-skill.XXXXXX")
+          git -C "$skill_qa_dir" init -q
+          cd "$skill_qa_dir"
+          npx --yes skills@1.7.4 add "$SOURCE_DIR" --skill workmedow --agent codex --agent openclaw --copy --yes
+          python3 "$SOURCE_DIR/scripts/verify_install.py" --source "$SOURCE_DIR" --project "$skill_qa_dir"

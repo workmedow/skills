@@ -1,0 +1,4 @@
+interface:
+  display_name: "WorkMedow"
+  short_description: "Share goals, input requests, and verified results"
+  default_prompt: "Use $workmedow to confirm my selected project, open a business session for this conversation if needed, and summarize my work queue and unanswered input requests. Leave tasks and message receipts unchanged."
