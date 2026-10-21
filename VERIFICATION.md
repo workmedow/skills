@@ -24,6 +24,27 @@ On 2026-10-20, the revised Skill and all three workflow/transport references pas
 
 These checks used isolated fixtures. They do not establish Muse cloud execution, Muse's automatic Skill discovery, a live OpenClaw model, production OAuth, or a different project's authorization. Installing/updating a Skill does not replace instructions already cached by a running host; ask that host to load the installed Skill again before evaluating it.
 
+## Collaboration contracts for v0.2.0
+
+On 2026-10-21, the optional collaboration workflow passed the format check and
+the pinned `skills@1.7.4` installer in a fresh project for Codex and OpenClaw.
+All five installed payload files matched the source. No personal host settings
+or credentials were changed by this installation check.
+
+Companion-product tests used a dedicated local MySQL database. A real Codex
+stdio MCP host and Grok Bot through its existing Mac command tool/CLI each read
+actual evidence, an answered decision and effective guidance, created a report,
+submitted it and independently read back `in_review`. Neither accepted its own
+submission. Grok used an updated private Skill, so that result is protocol and
+host evidence, not proof of automatic discovery of this exact public release.
+
+The host checks exposed a distinction now explicit in the workflow:
+`verification_bundles.create` needs `expected_task_version`; `tasks.complete`
+needs `expected_version`. Each check's evidence uses its own `artifact_ids`
+array. An incomplete report remains a record and must not be mistaken for
+evidence-complete delivery. Capability support and creation enablement are
+checked separately; older services retain their lightweight workflow.
+
 ## Runtime and authorization
 
 - Standard Skill hosts need a working WorkMedow MCP connection, the WorkMedow CLI and a command tool, or an already authenticated HTTP tool.

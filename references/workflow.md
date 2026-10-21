@@ -22,6 +22,12 @@ Use the existing active session only if it belongs to this external conversation
 | `task_update` | `tasks.update` |
 | `task_progress_post` | `tasks.progress` |
 | `task_complete` | `tasks.complete` |
+| `task_context_get` | `tasks.context` |
+| `task_contract_get` / `task_contract_propose` | `task_contracts.get` / `task_contracts.propose` |
+| `verification_bundle_create` / `verification_bundle_get` / `verification_bundles_list` | `verification_bundles.create/get/list` |
+| `task_input_request_clarification` | `action_requests.request_clarification` |
+| `project_guidance_list/get/propose/update/report_implementation` | corresponding `project_guidance.*` operations |
+| `artifact_get` / `artifact_preview` | `artifacts.get` / `artifacts.preview` |
 
 Read `capabilities_get` and `projects_list` with `{}`. Project context uses `{"project_id":"PROJECT_ID"}`. Use JSON arguments directly for MCP; for CLI pass a JSON file or quoted stdin to `workmedow --profile NAME api call OPERATION --input FILE`. Direct HTTP sends the same payload to the command endpoint but uses `session_id` in place of `business_session_id`. Read calls need no idempotency key.
 
@@ -88,6 +94,62 @@ After doing and verifying the actual work, reread the task with `task_get` / `ta
 ```
 
 Optional `artifact_ids` must be real artifacts already published in this project/task. Never invent a result, link or passing check. `done` means completed; `in_review` means submitted for human acceptance. Do not bypass review or call a pending submission done. Read the task back again, then report its real project, task ID, saved status and result. Acceptance, receipt ACK and task completion remain separate facts.
+
+## Optional collaboration capabilities
+
+Read the advertised `features` and their independent `version/enabled` values.
+`version:1` establishes contract support; `enabled:true` is also required to start
+a new workflow. With `enabled:false`, supported existing records remain readable
+and existing tasks may finish evidence, answers and resolution.
+When available, call `task_context_get` with the real task at goal start, explicit
+handoff and before completion. Read every remaining applicable-guidance page if
+the bounded context is truncated. Effective rules are shared context, never
+permission to run tools, deploy, change access or weaken human review.
+
+For human-enabled completion standards, record actual checks with
+`verification_bundle_create`: pass `task_id`, current `expected_task_version`,
+`contract_id`, and `checks` entries containing `criterion_id`, `result`
+(`passed`, `failed`, `unverified`), `method`, RFC3339 `checked_at`,
+`artifact_version`, and actual `artifact_ids`. Failed or incomplete reports are
+valid records; they do not satisfy completion. Agent self-report is not independent
+CI verification. Only humans activate/weaken standards or grant a scoped waiver.
+Pass a current unused `verification_bundle_id` to `task_complete`; after rejection
+or changed goal/assignment/standards, create a new report. Review remains separate.
+
+The bundle's task concurrency field is **`expected_task_version`**. Completion
+uses **`expected_version`**. Check evidence is the **`artifact_ids` array inside
+each check**; a singular `artifact_id` or `evidence_artifact_ids` is not that field.
+Read back the returned checks before completing. An incomplete report may be
+saved, but cannot satisfy an enabled criterion without its evidence or a human
+waiver. Keep unused reports as history; never overwrite them to fix a submission.
+
+Choose artifacts explicitly for each submission. Optional `presentation` is
+`{primary_artifact_id,items:[{artifact_id,role,title,description,cover_artifact_id,
+preview_artifact_id}]}`. Roles are `result`, `evidence`, `support`; optional strings
+may be omitted. Cover/preview IDs must be selected authorized files from the same
+task/project. Preview editions stay distinct from originals. Do not invent
+screenshots or silently include historical attachments.
+
+Use `request_kind:"decision"` only for a real decision. Supply `decision_brief`
+with `background`, `why_recipient`, at least two `choices:[{id,label,tradeoff}]`,
+`recommended_id`, `recommendation`, optional evidence `artifact_ids`, and optional
+RFC3339 `answer_by`. Information requests stay lightweight. Decision answers must
+include the observed `expected_revision`; never apply an old answer to a revised
+question. A clarification request preserves the blocker and does not resume work.
+
+Propose reusable guidance from the actual shared source and its version using
+`project_guidance_propose` with `title`, `body`,
+`guidance_source:{type,id,version}`, optional `applies_to_tags`, `expires_at`,
+`supersedes_id`. Source types are `task`, answered `action_request`, rejected
+`submission`, or task-discussion `message`. Agents edit only their own unpublished
+proposals. All writable humans may publish; Agents cannot publish or retire.
+After separately authorized implementation, report real code/test/lint/document
+work and evidence with `project_guidance_report_implementation`. Published rules
+and implementation reports are distinct facts.
+
+Preview reads return bounded text/structured content or metadata, not large binary
+base64. They do not ACK or accept results. New optional fields must not be added to
+an already journaled unknown write; settle its original payload/key first.
 
 ## Recording failures
 
