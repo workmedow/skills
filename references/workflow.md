@@ -8,7 +8,7 @@ Read capabilities and authorized projects, then project context. Confirm that `e
 
 Agent credentials normally have `personal_access: false`: they cannot use private captures or personal reviews. That flag does not disable writes to an authorized shared project, even when its display name is “Personal space.” Check that project's own scopes.
 
-Use the existing active session only if it belongs to this external conversation, identity and project. Otherwise open one session and save its returned ID. Do not open a session on every tool call or borrow another conversation's session. Read the non-consuming queue and input history when useful; no ACK is required merely to inspect the queue.
+Use the existing active session only if it belongs to this external conversation, identity and project. Otherwise open one session and save its returned ID. If this conversation explicitly works in multiple projects, keep separate session IDs and task context for each project; never pass A's session to B. Do not open a session on every tool call or borrow another conversation's session. Read the non-consuming queue and input history when useful; no ACK is required merely to inspect the queue.
 
 | MCP tool | CLI / HTTP command operation |
 |---|---|

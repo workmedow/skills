@@ -35,7 +35,17 @@ workmedow --profile my-agent login
 workmedow --profile my-agent doctor
 ```
 
-每个宿主／项目连接使用独立命名的 profile。在浏览器 OAuth 页面明确选择一个实际项目。安装 Skill 不会安装 CLI，也不会授权项目。宿主已有安全认证的 HTTP 工具时，还可按 [HTTP 参考](references/http.md)接入。
+每个稳定 Agent 连接使用独立命名的 profile。在浏览器 OAuth 页面明确选择目标项目和权限。同一 profile 可以授权多个项目；每次操作仍只属于一个项目，同一对话在各项目分别保留业务 session。安装 Skill 不会安装 CLI，也不会授权项目。宿主已有安全认证的 HTTP 工具时，还可按 [HTTP 参考](references/http.md)接入。
+
+### v0.3.0：多项目连接
+
+多项目 CLI profile 需要 **CLI 0.3.0-multi-project-beta 或更新版本**。新版 CLI 能读取原单项目 v1 配置；旧版 CLI 不能读取 profile v2。首次登录仅批准一个项目时仍自动绑定；批准多个项目时不会取第一项，CLI 调用需传 `--project PROJECT_ID`，工具参数需明确 `project_id`。
+
+已有单项目连接需明确执行 `workmedow --profile my-agent login --multi-project`，再次批准目标项目集合。该流程复用原 OAuth client 和稳定 Agent 身份。`login --project PROJECT_ID` 仍可明确创建单项目绑定；这两个登录选项互斥。
+
+项目 session 和操作日志继续隔离，A 的 session 或结果未知的写入不能发到 B。更新 Skill 不会更新已安装 CLI 或扩大权限；新增项目须由人类重新授权。按项目调用、离线历史和明确恢复见 [CLI 参考](references/cli.md)。
+
+v0.3.0 Skill 载荷与 WorkMedow 主库固定源码 `8366bae3be7a4e979c1109e60e48174d4fb5bde4` 一致。版本化 release 的 manifest 分别固定官方 Skill 提交与压缩包校验值。
 
 更新后请让宿主重新加载已安装的 Skill。宿主需要实际采用其中的指引；仅连接自检成功不会记录工作。
 

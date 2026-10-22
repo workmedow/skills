@@ -45,6 +45,28 @@ array. An incomplete report remains a record and must not be mistaken for
 evidence-complete delivery. Capability support and creation enablement are
 checked separately; older services retain their lightweight workflow.
 
+## Multi-project connections for v0.3.0
+
+On 2026-10-22, the five Skill payload files matched companion WorkMedow commit
+`8366bae3be7a4e979c1109e60e48174d4fb5bde4` byte for byte. The Skill format check
+and the pinned `skills@1.7.4` installer passed in a fresh isolated Git project
+for Codex and OpenClaw. The check compared `SKILL.md`, UI metadata and all three
+references against the source; it did not alter a personal Skill installation.
+
+An independent read-through evaluated a read-only request in project A followed
+by explicitly requested work in project B. The guidance keeps A's reads free of
+new sessions or receipts, selects B explicitly for its work, and preserves B's
+own business session and original operation during unknown-result recovery.
+This is a behavioral review of the instructions, not an executed model-host or
+production OAuth test.
+
+The companion product's isolated OAuth/API, stdio subprocess and real-MySQL
+tests cover multi-project approval, explicit project selection, project-bound
+business sessions, journal isolation, v1 profile upgrade and reauthorization
+boundaries. Those product checks are separate from installation of this public
+Skill release. Multi-project CLI profiles require CLI
+`0.3.0-multi-project-beta` or newer; updating these files does not update a binary.
+
 ## Runtime and authorization
 
 - Standard Skill hosts need a working WorkMedow MCP connection, the WorkMedow CLI and a command tool, or an already authenticated HTTP tool.

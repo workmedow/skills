@@ -35,7 +35,17 @@ workmedow --profile my-agent login
 workmedow --profile my-agent doctor
 ```
 
-Use a separate named profile for each host/project connection. Choose one actual project in browser OAuth. Installing the Skill does not install the CLI or authorize a project. Use existing authenticated HTTP tools: [HTTP reference](references/http.md).
+Use a separate named profile for each stable Agent connection. In browser OAuth, explicitly select the intended projects and permissions. A profile can authorize several projects; each project-scoped operation still targets one project, and each project has its own business session for this conversation. Installing the Skill does not install the CLI or authorize a project. Use existing authenticated HTTP tools: [HTTP reference](references/http.md).
+
+### v0.3.0: multi-project connections
+
+Multi-project CLI profiles require **CLI 0.3.0-multi-project-beta or newer**. The newer CLI reads existing single-project v1 profiles; older CLI binaries cannot read profile v2. A first login approving only one project keeps its automatic binding. Multiple projects never default to the first item: pass `--project PROJECT_ID` on a CLI call or explicit `project_id` in tool arguments.
+
+To upgrade an existing single-project connection, explicitly run `workmedow --profile my-agent login --multi-project` and approve the intended projects again. This reuses the registered OAuth client and stable Agent identity. `login --project PROJECT_ID` remains available for an intentional single-project binding; the two login options are mutually exclusive.
+
+Project sessions and operation journals stay separate. A session or uncertain write from A cannot be sent to B. Updating the Skill does not update an installed CLI or expand its permissions; adding projects requires human reauthorization. See the [CLI reference](references/cli.md) for explicit project selection, offline history and recovery.
+
+The v0.3.0 Skill payload matches companion WorkMedow source `8366bae3be7a4e979c1109e60e48174d4fb5bde4`. The versioned release manifest pins the official Skill commit and archive checksum separately.
 
 After an update, ask your host to load the installed Skill again. The host must actually use its instructions; a successful connection check alone does not record work.
 
