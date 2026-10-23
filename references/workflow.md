@@ -4,16 +4,18 @@ Use this lifecycle for work the human requests in their selected, connected proj
 
 ## Connection and identifiers
 
-Read capabilities and authorized projects, then project context. Confirm that `effective_scopes` includes `write`, and that the intended project appears in `effective_projects` with `write` in its `scopes`. Use the authenticated identity shown by the connection/context; never choose another Agent's name to gain access. If the project is not selected or write access is missing, explain the missing choice or permission instead of writing elsewhere. Connection success or an open session alone does not prove write access.
+Read capabilities and authorized spaces/projects, then project context. Confirm `authorization_mode` and the target's effective `write` scopes. Space credentials advertise `effective_workspaces` and cover each authorized space's current and future projects. A writable space permits creating a real product/repository project with `project_create` before any project session exists, including in an empty space. Legacy project credentials remain restricted to `effective_projects` and require explicit space reauthorization to upgrade. Use the authenticated identity shown by the connection/context; never choose another Agent's name to gain access. If the work target is unclear or write access is missing, explain the missing choice or permission instead of writing elsewhere. Connection success or an open session alone does not prove write access.
 
-Agent credentials normally have `personal_access: false`: they cannot use private captures or personal reviews. That flag does not disable writes to an authorized shared project, even when its display name is “Personal space.” Check that project's own scopes.
+Agent credentials normally have `personal_access: false`: they cannot use private captures or personal reviews. That flag does not disable shared writes inside an authorized space. Display names do not determine scope or turn private data into shared project content.
 
 Use the existing active session only if it belongs to this external conversation, identity and project. Otherwise open one session and save its returned ID. If this conversation explicitly works in multiple projects, keep separate session IDs and task context for each project; never pass A's session to B. Do not open a session on every tool call or borrow another conversation's session. Read the non-consuming queue and input history when useful; no ACK is required merely to inspect the queue.
 
 | MCP tool | CLI / HTTP command operation |
 |---|---|
 | `capabilities_get` | `capabilities.get` |
+| `workspaces_list` / `workspace_get` | `workspaces.list` / `workspaces.get` |
 | `projects_list` | `projects.list` |
+| `project_create` | `projects.create` |
 | `project_context_get` | `projects.snapshot` |
 | `agent_session_open` | `sessions.open` |
 | `agent_work_queue` | `agent.work_queue` |
@@ -29,7 +31,9 @@ Use the existing active session only if it belongs to this external conversation
 | `project_guidance_list/get/propose/update/report_implementation` | corresponding `project_guidance.*` operations |
 | `artifact_get` / `artifact_preview` | `artifacts.get` / `artifacts.preview` |
 
-Read `capabilities_get` and `projects_list` with `{}`. Project context uses `{"project_id":"PROJECT_ID"}`. Use JSON arguments directly for MCP; for CLI pass a JSON file or quoted stdin to `workmedow --profile NAME api call OPERATION --input FILE`. Direct HTTP sends the same payload to the command endpoint but uses `session_id` in place of `business_session_id`. Read calls need no idempotency key.
+Read `capabilities_get` and `workspaces_list` with `{}`. `workspace_get` takes `{"workspace_id":"SPACE_ID"}`; `projects_list` optionally accepts that field to filter the directory. To create a requested real project in a writable space, use `project_create` with `{"workspace_id":"SPACE_ID","name":"Repository name","idempotency_key":"NEW_PROJECT_KEY"}`, optionally adding `description` and `repository_url`. Do not send `project_id` or a business session for creation; use the returned project ID for subsequent work. Space access is unchanged by adding a project, so the original connection can use the new project immediately.
+
+Project context uses `{"project_id":"PROJECT_ID"}`. Use JSON arguments directly for MCP; for CLI pass a JSON file or quoted stdin to `workmedow --profile NAME api call OPERATION --input FILE`. Direct HTTP sends the same payload to the command endpoint but uses `session_id` in place of `business_session_id`. Read calls need no idempotency key.
 
 Successful results are inside `data`: use MCP `structuredContent.data` or the text JSON's `data`, and CLI/HTTP `data`. The session/task fields below refer to that object. A CLI `operation_id` identifies the local write journal, not a task or session.
 
@@ -155,4 +159,4 @@ an already journaled unknown write; settle its original payload/key first.
 
 Do not say a goal, progress or completion was recorded until the service confirms it. If creation/start fails, report which record is missing and resolve the recording gap before substantial untracked work when the human expects a shared record. If work finished but completion recording failed, report both facts separately.
 
-On an ordinary version conflict, reread and reassess before a new write. On an unknown result, preserve the original payload, idempotency key and expected versions; first confirm or explicitly recover that original operation. Do not create another goal, use a new key, submit edited input or replay automatically on reconnect. CLI recovery and direct HTTP durability are described in their transport references.
+On an ordinary version conflict, reread and reassess before a new write. On an unknown result, preserve the original payload, idempotency key and expected versions; first confirm or explicitly recover that original operation before another conflicting write in its space/project partition. Do not create another goal to replace it, use a new key, submit edited input or replay automatically on reconnect. Explicitly requested work in a different authorized project may continue in its separate partition with its own session and goal; keep the original unresolved record visible and never retarget it. An unknown space-level project creation still blocks conflicting creation in that space. CLI recovery and direct HTTP durability are described in their transport references.

@@ -1,6 +1,6 @@
 # Verification
 
-This repository distributes the WorkMedow Skill. Installing it does not configure a model, install the WorkMedow CLI, authorize a project, or start an agent.
+This repository distributes the WorkMedow Skill. Installing it does not configure a model, install the WorkMedow CLI, authorize a space, or start an agent.
 
 ## Installation checks
 
@@ -67,11 +67,38 @@ boundaries. Those product checks are separate from installation of this public
 Skill release. Multi-project CLI profiles require CLI
 `0.3.0-multi-project-beta` or newer; updating these files does not update a binary.
 
+## Spaces and Agent-created projects for v0.4.0
+
+On 2026-10-23, all five Skill payload files matched companion WorkMedow source
+`d9d3e2bf50250fdeb2428a6c9dc0eec58ed2ee10` byte for byte. The format check and
+the pinned `skills@1.7.4` copy-mode installer passed for Codex and OpenClaw in a
+fresh isolated Git project. All five installed files matched the source, without
+updating a personal Skill installation or host configuration.
+
+An independent instruction review evaluated work in an initially empty writable
+space, a strictly read-only connection check, continuing explicitly requested
+work in project B while project A retains an unknown write, and a legacy v2
+credential discovering an unapproved project. The instructions permit creating
+a real repository project before any project session and using the same space
+grant immediately. They prohibit business writes during the read-only check,
+keep each project session and immutable operation separate, and do not convert
+legacy project grants through refresh or discovery. An ambiguous global write
+block was clarified to match the original space/project journal partition.
+This is an instruction review, not an executed live model-host test.
+
+Space profiles require CLI `0.4.0-space-beta` or newer with profile v3. Install
+the matching binary and explicitly complete `login --space-access` consent to
+replace a legacy project approval. Updating the Skill alone grants no access,
+installs no CLI and does not migrate stored project memberships. Companion
+product tests and production deployment are recorded separately in that
+product's release evidence; file installation is not a substitute for OAuth,
+real-host execution or signed binary distribution.
+
 ## Runtime and authorization
 
 - Standard Skill hosts need a working WorkMedow MCP connection, the WorkMedow CLI and a command tool, or an already authenticated HTTP tool.
 - Claude Desktop connects through MCP; it does not use the coding-agent Skill folder route.
-- Browser project authorization, business-session creation and live collaboration are separate from the file installation checks.
-- The smoke test does not exercise OpenClaw's native Git installer, a live OpenClaw model, project OAuth, task changes, input answers, or message ACKs.
+- Browser space authorization, project business-session creation and live collaboration are separate from the file installation checks.
+- The smoke test does not exercise OpenClaw's native Git installer, a live OpenClaw model, space OAuth, task changes, input answers, or message ACKs.
 
-Use the [official setup guide](https://app.workmedow.com/docs/agents/) for runtime downloads and project authorization. Earlier product integration results do not automatically establish a live-host result for this public Skill release.
+Use the [official setup guide](https://app.workmedow.com/docs/agents/) for runtime downloads and space authorization. Earlier product integration results do not automatically establish a live-host result for this public Skill release.

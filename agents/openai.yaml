@@ -1,6 +1,6 @@
 interface:
   display_name: "WorkMedow"
   short_description: "Share goals, input requests, and verified results"
-  default_prompt: "Use $workmedow to carry out and record my current authorized goal in the selected project, reusing or creating one task, recording meaningful progress, and saving the verified result."
+  default_prompt: "Use $workmedow to carry out and record my current authorized goal in the selected space or project, using or creating a real project in that writable space, reusing or creating one task, and saving meaningful progress and the verified result."
 policy:
   allow_implicit_invocation: true
