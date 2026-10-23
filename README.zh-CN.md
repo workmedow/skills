@@ -14,6 +14,10 @@
 
 ## 安装
 
+v0.4.1 补齐本地图片/文件上传：使用 CLI `artifacts upload`，或 profile 本地 MCP 的 `artifact_upload`。任务创建者在指派后仍可修订标题和描述。上传功能需要 CLI 0.4.1-space-beta 或更新版本；请核对宿主实际配置的可执行文件，单独更新 Skill 不会替换旧 CLI。
+
+人类明确要求时，可以更新官方 Skill。WorkMedow 没有禁止 Grok Bot 更新 Skill 的专属规则；若宿主另有限制，应说明真实来源。空间权限仍通过明确的 OAuth 授权获得。
+
 准备 Node.js 22.20+，在 Agent 的实际工作目录中执行：
 
 ```sh

@@ -46,6 +46,18 @@ The same form invokes `tasks.get`, `tasks.update`, `tasks.progress` and `tasks.c
 
 For local MCP, `workmedow --profile team mcp stdio` requires project tools to name `project_id` explicitly when no default is saved. Space discovery and `project_create` need no project. `mcp stdio --project PROJECT_A` fixes only that process's project routing without changing the profile or its space ACL. Do not maintain a shared mutable current project across host conversations.
 
+## Local images and files
+
+CLI **0.4.1-space-beta or newer** can upload a local file directly to a task. It uses the private multipart API, not a public hosting link. Select an actual file the human authorized for this task, up to 20 MiB, and use this conversation's existing project session:
+
+```sh
+workmedow --profile team artifacts upload --project PROJECT_A --task TASK_ID --session SESSION_ID --file /absolute/path/screenshot.png
+```
+
+Optional `--name screenshot.png` sets the attachment filename; `--idempotency-key KEY` supplies a stable key. The result includes the artifact ID, task, MIME type, size, SHA-256 and authenticated download URL. The CLI verifies size/digest and saves an immutable private copy in the mutation journal before sending. If the response is unknown, use the ordinary `api operations` and explicit `api recover OPERATION_ID --confirm`; recovery resends the original bytes even if the file on disk changed. Do not replace the key or upload a changed file to bypass uncertainty.
+
+The profile-backed local stdio server advertises `artifact_upload` with `project_id`, `task_id`, `business_session_id`, `idempotency_key`, absolute `file_path` and optional `name`. A remote MCP server deliberately does not resolve local paths. When only remote MCP is available, use the installed CLI through the host's command tool, or a host-authorized authenticated multipart HTTP transport. Do not paste binary/base64 content into chat. Use `artifact_publish` only for an existing HTTPS resource.
+
 If the terminal reports an unknown operation result or the process was killed:
 
 ```sh

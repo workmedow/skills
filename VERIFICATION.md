@@ -4,6 +4,10 @@ This repository distributes the WorkMedow Skill. Installing it does not configur
 
 ## Installation checks
 
+### v0.4.1 collaboration update
+
+The five Skill payloads match companion source `f6898589ee58bfabba068c09d6963c8436b006ac`. Its full Go race suite ran with explicit isolated MySQL databases. The actual macOS arm64 0.4.1-space-beta ZIP passed OAuth space consent, new/future projects, separate project sessions, PNG upload through CLI and local stdio, authenticated byte-for-byte download, human-review preservation and logout revocation. Creator-only definition edits after assignment were also verified through real MySQL/HTTP, including rejection of execution takeover and stale writes. These are transport and binary checks, not proof that every external model host has reloaded its configuration. Skill format validation passed; installation CI is recorded per commit.
+
 ### Initial v0.1.0 publication
 
 The release smoke test uses the official `skills@1.7.4` installer with explicit Codex and OpenClaw targets, project scope, and copy mode. It verifies the installed Skill, every relative Markdown reference, and Codex UI metadata byte for byte against the source. Tests run in a separate Git workspace with telemetry disabled and do not install into the operator's personal Skill directories.

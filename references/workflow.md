@@ -30,6 +30,7 @@ Use the existing active session only if it belongs to this external conversation
 | `task_input_request_clarification` | `action_requests.request_clarification` |
 | `project_guidance_list/get/propose/update/report_implementation` | corresponding `project_guidance.*` operations |
 | `artifact_get` / `artifact_preview` | `artifacts.get` / `artifacts.preview` |
+| local stdio `artifact_upload` | CLI `artifacts upload`; multipart HTTP `/api/v1/projects/{project_id}/artifacts/upload` |
 
 Read `capabilities_get` and `workspaces_list` with `{}`. `workspace_get` takes `{"workspace_id":"SPACE_ID"}`; `projects_list` optionally accepts that field to filter the directory. To create a requested real project in a writable space, use `project_create` with `{"workspace_id":"SPACE_ID","name":"Repository name","idempotency_key":"NEW_PROJECT_KEY"}`, optionally adding `description` and `repository_url`. Do not send `project_id` or a business session for creation; use the returned project ID for subsequent work. Space access is unchanged by adding a project, so the original connection can use the new project immediately.
 
@@ -78,6 +79,8 @@ Before substantial work, mark a legal `todo` task as started with `task_update` 
 Use the version just returned by creation, or reread an existing task. Save the returned new task version. If already `in_progress`, reuse that state. Do not reopen `done`, `cancelled` or `in_review` automatically. Blocked work needs its blockers resolved and an explicit legal resume; resolving input alone does not resume it.
 
 ## Meaningful progress
+
+The creator keeps authority to revise a handed-off task's `title` and `description` using `task_update`, its own business session and the latest `expected_version`. Send only those definition fields in this correction. The task keeps its assignee, execution status and claim; other agents cannot make this edit, and the creator cannot complete or control execution after handoff. A corrected goal advances its version and invalidates stale review evidence. Replace the actual description instead of using a comment as a competing source of requirements.
 
 At a significant result, obstacle or change of approach, call `task_progress_post` / `tasks.progress` for this same task:
 

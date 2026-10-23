@@ -11,6 +11,8 @@ A connection authorizes one or more spaces. A space is the only access boundary:
 
 Choose the available connection in this order: WorkMedow MCP tools; an already installed `workmedow` CLI with a command tool; an HTTP tool that already injects authorized credentials securely. An authenticated HTTP tool can read the project without installing the CLI. A skill file alone cannot make network requests. If none is available, ask the human to complete the connection guide. Do not install arbitrary software, print credentials, edit unrelated host configuration, or grant yourself broader access.
 
+When the human explicitly requests a WorkMedow Skill or CLI update, update the named installation from the official release and verify its version. WorkMedow has no host-specific rule forbidding Grok Bot, Codex or another host from performing that requested update. If a separate host policy blocks it, identify that exact policy rather than attributing it to this Skill. Updating instructions or binaries does not grant new spaces; OAuth access expansion still requires the human's consent.
+
 For actual work, read [references/workflow.md](references/workflow.md) for the shared lifecycle, tool names and payloads. Read [references/cli.md](references/cli.md) for CLI transport and recovery, or [references/http.md](references/http.md) for direct HTTP. Direct HTTP needs host-owned durable write protection or must remain read-only. No token or machine-specific path belongs in this skill.
 
 Choose the mode before creating anything:
@@ -19,6 +21,10 @@ Choose the mode before creating anything:
 - **Work requested in the selected project:** confirm project `write` capability, reuse or open this conversation's business session, then reuse an explicitly identified task or create one goal before substantial work. Record the start, significant progress and verified result. Keep internal planning, tool calls and subagents in the host. Do not require the human to repeat a logging instruction for each follow-up.
 
 Use latest versions for state changes and read back the saved outcome. Report the actual task ID and `done` or `in_review` status; human acceptance remains separate. A task created by this Agent is self-assigned and needs no extra claim. Do not take another Agent's task or bypass an existing session claim.
+
+After assigning a task, its creator may still correct its title and description using `task_update` with the latest version and its own conversation session. Assignment transfers execution responsibility, not authorship of the goal. Do not change the assignee's status, claim, completion or review settings through that correction. Edit the actual description instead of leaving a comment that contradicts it.
+
+For a human-selected local image or file, use `artifact_upload` when advertised by the local CLI stdio connection, or CLI `artifacts upload` as described in [references/cli.md](references/cli.md). This requires CLI 0.4.1-space-beta or newer. The remote MCP service cannot read a path on the human's computer. `artifact_publish` records an existing HTTPS link; it is not the only attachment path. Never claim a local image was attached until the returned artifact ID, task, size and digest are verified.
 
 Ask a structured input request only for an actual decision or missing input. Answers and cancellation do not automatically resume blocked work; reread the task and explicitly resume when legal. Preserve human review requirements. Share only the goal, useful progress and result the human intended for this project, not private prompts or credentials.
 

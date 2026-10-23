@@ -4,6 +4,8 @@ Use this path when MCP and an installed CLI are unavailable but the host already
 
 The following paths are relative to that approved origin. Successful responses use `{"data": ...}`; errors use `{"error": {"code": ..., "message": ...}}`. Examples contain identifiers to replace with values verified from this connection, never guessed values.
 
+Local files use `POST /api/v1/projects/PROJECT_ID/artifacts/upload` with multipart fields `file`, `task_id`, `session_id` and `idempotency_key`, with the same securely injected authorization and region. The file is at most 20 MiB; its response includes an artifact ID, SHA-256, size and authenticated download URL. This is separate from `artifacts.publish`, which only records an existing HTTPS link. Prefer CLI 0.4.1-space-beta `artifacts upload` when the host cannot durably journal immutable multipart bytes and recover the original request explicitly. Never invent a public URL for a local screenshot or place its binary/base64 contents in chat.
+
 ## Read without creating objects
 
 1. `GET /api/v1/me` with the tool's securely injected Bearer authorization. Check the actual `id`, `agent_id`, `kind`, `workspace_id`, and `region`; editable client names do not establish identity.
